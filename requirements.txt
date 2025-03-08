@@ -1,3 +1,4 @@
+CityLearn==2.1b12
 pandas
 numpy
 matplotlib
@@ -9,4 +10,3 @@ stable-baselines3
 shimmy
 requests
 beautifulsoup4
-jupyter
