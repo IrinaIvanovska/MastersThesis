@@ -1,0 +1,26 @@
+from Agent.meta_agent_sac import MetaRLAgent  
+
+env = CityLearnEnv('citylearn_challenge_2023_phase_2_local_evaluation', central_agent=True)
+env = NormalizedObservationWrapper(env)  # Normalize the observations
+env = StableBaselines3Wrapper(env)  # Wrap for Stable-Baselines3 compatibility
+
+# Initialize Meta-RL Agent
+action_space = env.action_space
+observation_space = env.observation_space
+meta_agent = MetaRLAgent(action_space, observation_space)
+
+# Meta-train the agent
+meta_agent.meta_train(env, num_iterations=1000, episodes=2)
+
+# Test the agent
+observations, _ = env.reset()
+
+while not env.unwrapped.terminated:
+    actions = meta_agent.compute_action(observations, agent_id=0)  # Compute action
+    observations, _, _, _, _ = env.step(actions)  # Take step in environment
+
+# Evaluate the agent's performance using KPIs
+kpis = env.unwrapped.evaluate()
+kpis = kpis.pivot(index='cost_function', columns='name', values='value').round(3)
+kpis = kpis.dropna(how='all')
+import ace_tools as tools; tools.display_dataframe_to_user(name="KPIs", dataframe=kpis)  # Display KPIs
