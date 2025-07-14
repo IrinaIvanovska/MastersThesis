@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 19 19:48:23 2025
+
+@author: ivanovsi
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
