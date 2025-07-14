@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun 29 13:34:37 2025
+Created on Sun Jun 29 19:34:37 2025
 
 @author: ivanovsi
 """
@@ -13,13 +13,13 @@ Created on Sun Jun 29 13:34:37 2025
 import torch
 import os
 from lstm_q_agent import LSTMQAgent
-from wp2_agent_setup import load_all_building_data
+from agent_setup import load_all_building_data
 import numpy as np
 
 # Config
-DATA_ROOT = 'outputs/wp1_phase3'
+DATA_ROOT = 'outputs/phase3'
 MODEL_PATH = 'rl_model.pt'
-INPUT_DIM = 15
+INPUT_DIM = 28
 HIDDEN_DIM = 64
 OUTPUT_DIM = 5  # Arbitrary action size
 SEQ_LEN = 8
@@ -28,9 +28,10 @@ EPOCHS = 10
 # Reward Proxy
 def compute_reward(df):
     return -(
-        df['cooling_demand'] +
-        df['heating_demand'] +
-        df['average_unmet_cooling_setpoint_difference'].abs()
+        df["cooling_demand"]
+        + df["dhw_demand"]
+        + df["electricity_pricing"] * df["non_shiftable_load"]
+        - 0.1 * df["solar_generation"]
     )
 
 # Create sequences

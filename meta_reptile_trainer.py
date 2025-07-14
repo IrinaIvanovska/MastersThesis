@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun 29 13:32:06 2025
+Created on Sun Jun 15 10:12:06 2025
 
 @author: ivanovsi
 """
@@ -14,10 +14,11 @@ import torch
 import random
 import numpy as np
 from lstm_q_agent import LSTMQAgent
-from wp2_agent_setup import load_all_building_data
-
+from agent_setup import load_all_building_data
+import os
+import pandas as pd
 # Config
-INPUT_DIM = 15
+INPUT_DIM = 28
 HIDDEN_DIM = 64
 OUTPUT_DIM = 5
 INNER_STEPS = 10
@@ -26,13 +27,14 @@ META_LR = 1.0
 SEQ_LEN = 8
 
 # Load building data
-tasks = load_all_building_data('outputs/wp1_phase3')
+tasks = load_all_building_data('outputs/phase3')
 
 def compute_reward(df):
     return -(
-        0.7 * df['average_unmet_cooling_setpoint_difference'].abs() +
-        0.3 * df['cooling_demand'] +
-        0.3 * df['heating_demand']
+        df["cooling_demand"]
+        + df["dhw_demand"]
+        + df["electricity_pricing"] * df["non_shiftable_load"]
+        - 0.1 * df["solar_generation"]
     )
 
 # Create LSTM sequences and Q-targets
@@ -94,3 +96,16 @@ for name, param in meta_agent.model.named_parameters():
 
 print("✅ Verified Meta-training complete.")
 
+from evaluation_kpi import compute_kpis_from_obs  # <- reuse from earlier
+
+os.makedirs("outputs/meta_rl_kpis", exist_ok=True)
+
+print("\n📊 Evaluating final Meta-RL model on all buildings for KPIs:")
+for i, df in enumerate(tasks):
+    building_name = f'Building_{i+1}'
+    kpis = compute_kpis_from_obs(df)
+    pd.DataFrame(kpis, index=[0]).to_csv(f"outputs/meta_rl_kpis/{building_name}_kpis.csv", index=False)
+
+    print(f"🏢 {building_name}:")
+    for key, val in kpis.items():
+        print(f"   {key}: {val:.3f}")
