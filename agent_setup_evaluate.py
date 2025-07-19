@@ -6,13 +6,6 @@ Created on Mon Jul 14 18:30:01 2025
 @author: ivanovsi
 """
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 23 07:32:43 2025
-
-@author: ivanovsi
-"""
 
 # ----------------------------------------
 # Task Loader for Meta-RL in CityLearn
@@ -76,5 +69,5 @@ tasks = load_all_building_data(DATA_ROOT)
 for i, task_df in enumerate(tasks):
     print(f'Task {i+1} - Shape: {task_df.shape}')
 
-print("✅ All tasks loaded and preprocessed. Ready for Reptile LSTM-Q agent.")
+print("All tasks loaded and preprocessed. Ready for Reptile LSTM-Q agent.")
 
