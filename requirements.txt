@@ -1,0 +1,12 @@
+CityLearn
+pandas
+numpy
+matplotlib
+seaborn
+torch
+scikit-learn 
+ipywidgets
+stable-baselines3
+shimmy
+requests
+beautifulsoup4
