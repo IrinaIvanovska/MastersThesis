@@ -6,6 +6,7 @@ Created on Sat Nov 01 08:21:16 2025
 @author: ivanovsi
 """
 
+#!/usr/bin/env python3
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,7 +19,7 @@ plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.size'] = 11
 plt.rcParams['figure.dpi'] = 150
 
-OUTPUT_DIR = '../outputs/eval/graphs'
+OUTPUT_DIR = '../outputs/graphs'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 print("="*80)
@@ -26,9 +27,9 @@ print("CREATING PLOTS")
 print("="*80)
 
 # Load ACCURATE data from CSV
-df = pd.read_csv('../outputs/eval/comprehensive_metrics/all_metrics.csv')
+df = pd.read_csv('../outputs/comprehensive_metrics/all_metrics.csv')
 
-print("✅ Using data:")
+print("Using data:")
 for _, row in df.iterrows():
     print(f"  {row['Method']:12s}: Carbon={row['Carbon_%']:+.2f}%, "
           f"Cost={row['Cost_%']:+.2f}%, Peak={row['Peak_%']:+.2f}%")
@@ -51,7 +52,7 @@ COLORS = {
 # ============================================================================
 # PLOT 1: Training Curves (Simulated - showing Meta-RL advantage)
 # ============================================================================
-print("\n📈 Creating Training Curves...")
+print("\n Creating Training Curves...")
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -97,12 +98,12 @@ plt.savefig(f'{OUTPUT_DIR}/training_curves.png',
             dpi=300, bbox_inches='tight')
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/training_curves.png")
+print(f"  Saved: {OUTPUT_DIR}/training_curves.png")
 
 # ============================================================================
 # PLOT 2: Consumption Patterns (Simulated realistic patterns)
 # ============================================================================
-print("\n📈 Creating Consumption Patterns...")
+print("\n Creating Consumption Patterns...")
 
 fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -141,12 +142,12 @@ plt.savefig(f'{OUTPUT_DIR}/consumption_patterns.png',
             dpi=300, bbox_inches='tight')
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/consumption_patterns.png")
+print(f" Saved: {OUTPUT_DIR}/consumption_patterns.png")
 
 # ============================================================================
 # PLOT 3: Combined Figure (Training + Consumption)
 # ============================================================================
-print("\n📈 Creating Combined Publication Figure...")
+print("\n Creating Combined Publication Figure...")
 
 fig = plt.figure(figsize=(16, 10))
 gs = fig.add_gridspec(2, 2, hspace=0.3, wspace=0.25)
@@ -192,7 +193,7 @@ ax2.grid(True, alpha=0.3)
 ax2.set_xticks(range(0, 24, 4))
 
 # Subplot 3: Performance comparison (bottom, full width)
-"""ax3 = fig.add_subplot(gs[1, :])
+ax3 = fig.add_subplot(gs[1, :])
 
 x = np.arange(3)
 width = 0.25
@@ -209,7 +210,7 @@ for i, model in enumerate(['Meta-RL', 'Standard RL', 'RBC']):
     for bar, val in zip(bars, values):
         height = bar.get_height()
         va = 'bottom' if height >= 0 else 'top'
-        y_pos = height + (0.8 if height >= 0 else -0.8)
+        y_pos = height + (0.3 if height >= 0 else -0.3)
         ax3.text(bar.get_x() + bar.get_width()/2., y_pos,
                 f'{val:+.1f}%', ha='center', va=va,
                 fontweight='bold', fontsize=10)
@@ -229,89 +230,14 @@ plt.suptitle('Meta-RL for Building Energy Management: Complete Performance Analy
 
 plt.savefig(f'{OUTPUT_DIR}/combined_figure.png', 
             dpi=300, bbox_inches='tight', facecolor='white')
-plt.close()"""
-
-
-ax3 = fig.add_subplot(gs[1, :])
-
-x = np.arange(3)
-width = 0.25
-
-model_order = ['Meta-RL', 'Standard RL', 'RBC']
-
-for i, model in enumerate(model_order):
-    values = [
-        results[model]['carbon'],
-        results[model]['cost'],
-        results[model]['peak']
-    ]
-
-    offset = (i - 1) * width
-    bars = ax3.bar(
-        x + offset,
-        values,
-        width,
-        label=model,
-        color=COLORS[model],
-        alpha=0.85,
-        edgecolor='black',
-        linewidth=0.8
-    )
-
-    # ---- LABELS INSIDE EACH BAR ----
-    for bar, val in zip(bars, values):
-        height = bar.get_height()
-
-        # X: centered in bar
-        x_pos = bar.get_x() + bar.get_width() / 2
-
-        # Y: centered vertically INSIDE the bar
-        y_pos = height / 2
-
-        ax3.text(
-            x_pos,
-            y_pos,
-            f'{val:+.1f}%',
-            ha='center',
-            va='center',
-            fontsize=10,
-            fontweight='bold',
-            color='black' if abs(val) < 7 else 'white'
-            # white text for deep negative bars so it's readable
-        )
-    # ---------------------------------
-
-ax3.axhline(y=0, color='black', linewidth=0.8)
-ax3.set_ylabel('Reduction/Savings (%)', fontweight='bold', fontsize=12)
-ax3.set_title('(C) Test Performance on Unseen Buildings',
-              fontweight='bold', fontsize=13, loc='left')
-
-ax3.set_xticks(x)
-ax3.set_xticklabels(['Carbon\nReduction', 'Cost\nSavings', 'Peak\nReduction'])
-
-ax3.legend(loc='upper left', framealpha=0.95, fontsize=11)
-ax3.grid(True, alpha=0.3, axis='y')
-ax3.set_ylim([-12, 8])
-
-plt.suptitle(
-    'Meta-RL for Building Energy Management: Complete Performance Analysis',
-    fontsize=16, fontweight='bold', y=0.98
-)
-
-plt.savefig(
-    f'{OUTPUT_DIR}/combined_figure.png',
-    dpi=300,
-    bbox_inches='tight',
-    facecolor='white'
-)
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/combined_figure.png")
+print(f" Saved: {OUTPUT_DIR}/combined_figure.png")
 
 # ============================================================================
 # PLOT 4: Detailed Metrics Table
 # ============================================================================
-print("\n📊 Creating Detailed Metrics Table...")
+print("\n Creating Detailed Metrics Table...")
 
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.axis('tight')
@@ -374,11 +300,11 @@ plt.savefig(f'{OUTPUT_DIR}/metrics_table.png',
             dpi=300, bbox_inches='tight')
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/metrics_table.png")
+print(f" Saved: {OUTPUT_DIR}/metrics_table.png")
 
 # Create summary
 print("\n" + "="*80)
-print("✅ PLOTS CREATED!")
+print(" PLOTS CREATED!")
 print("="*80)
 print("Files created:")
 print("  1. training_curves.png")
@@ -386,12 +312,12 @@ print("  2. consumption_patterns.png")
 print("  3. combined_figure.png")
 print("  4. metrics_table.png")
 
-print(f"\n📊 Results Used:")
+print(f"\n Results Used:")
 print(f"  Meta-RL:     Carbon={results['Meta-RL']['carbon']:+.2f}%, Cost={results['Meta-RL']['cost']:+.2f}%, Peak={results['Meta-RL']['peak']:+.2f}%")
 print(f"  Standard RL: Carbon={results['Standard RL']['carbon']:+.2f}%, Cost={results['Standard RL']['cost']:+.2f}%, Peak={results['Standard RL']['peak']:+.2f}%")
 print(f"  RBC:         Carbon={results['RBC']['carbon']:+.2f}%, Cost={results['RBC']['cost']:+.2f}%, Peak={results['RBC']['peak']:+.2f}%")
 
-print("\n🎯 Key Message:")
+print("\n Key Message:")
 print("  Meta-RL achieves consistent positive results")
 print("  Standard RL and RBC both fail on unseen buildings")
 print("  This demonstrates Meta-RL's superior generalization!")

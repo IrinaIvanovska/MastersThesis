@@ -5,7 +5,6 @@ Created on Sun Jun 29 13:26:03 2025
 
 @author: ivanovsi
 """
-
 # system operations
 import os
 import warnings
@@ -62,7 +61,7 @@ for building in BUILDINGS:
 
     # Plot and save visualizations
     # Visualize raw input data before training
-    print("\nGenerating feature plots for each building...")
+    print("\n Generating feature plots for each building...")
     # Visualize selected building-related columns
     for col in columns_to_plot_building:
         if col in df.columns:
@@ -88,7 +87,6 @@ for building in BUILDINGS:
             plt.tight_layout()
             plt.savefig(os.path.join(out_building_dir, f'{col}_weather_plot.png'))
             plt.close()
-
 
 
 print("Visualisations completed successfully for all 6 buildings (Phase 3.1). Outputs saved to 'outputs/phase3/'")

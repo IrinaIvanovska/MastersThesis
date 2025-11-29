@@ -5,6 +5,8 @@ Created on Sat Nov 15 14:43:36 2025
 
 @author: ivanovsi
 """
+#!/usr/bin/env python3
+
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,7 +17,7 @@ plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.size'] = 10
 
-OUTPUT_DIR = '../outputs/eval/graphs'
+OUTPUT_DIR = '../outputs/graphs'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 print("="*80)
@@ -23,9 +25,9 @@ print("CREATING COMPREHENSIVE METRICS TABLE")
 print("="*80)
 
 # Load ACCURATE comprehensive metrics
-df = pd.read_csv('../outputs/eval/comprehensive_metrics/all_metrics.csv')
+df = pd.read_csv('../outputs/comprehensive_metrics/all_metrics.csv')
 
-print("✅ Using comprehensive data:")
+print("Using comprehensive data:")
 for _, row in df.iterrows():
     print(f"  {row['Method']:12s}: Carbon={row['Carbon_%']:+.2f}%, "
           f"Cost={row['Cost_%']:+.2f}%, Peak={row['Peak_%']:+.2f}%")
@@ -45,7 +47,7 @@ meta_avgpeak_imp = (1.0 - meta['Avg_Peak']) * 100
 meta_annualpeak_imp = (1.0 - meta['Annual_Peak']) * 100
 meta_netcons_imp = (1.0 - meta['Net_Consumption']) * 100
 
-print(f"\n📊 Meta-RL Improvement from Baseline (1.0):")
+print(f"\nMeta-RL Improvement from Baseline (1.0):")
 print(f"  Ramping:         {meta_ramping_imp:+.2f}%")
 print(f"  Load Factor:     {meta_lf_imp:+.2f}%")
 print(f"  Avg Peak:        {meta_avgpeak_imp:+.2f}%")
@@ -55,7 +57,7 @@ print(f"  Net Consumption: {meta_netcons_imp:+.2f}%")
 # ============================================================================
 # COMPREHENSIVE METRICS TABLE
 # ============================================================================
-print("\n📊 Creating Comprehensive Metrics Table...")
+print("\nCreating Comprehensive Metrics Table...")
 
 fig, ax = plt.subplots(figsize=(16, 8))
 ax.axis('tight')
@@ -149,12 +151,12 @@ plt.savefig(f'{OUTPUT_DIR}/comprehensive_metrics_table.png',
             dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/comprehensive_metrics_table.png")
+print(f"  Saved: {OUTPUT_DIR}/comprehensive_metrics_table.png")
 
 # ============================================================================
 # DETAILED METRICS BREAKDOWN TABLE
 # ============================================================================
-print("\n📊 Creating Detailed Metrics Breakdown...")
+print("\nCreating Detailed Metrics Breakdown...")
 
 fig, ax = plt.subplots(figsize=(14, 10))
 ax.axis('tight')
@@ -263,12 +265,12 @@ plt.savefig(f'{OUTPUT_DIR}/detailed_metrics_breakdown.png',
             dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/detailed_metrics_breakdown.png")
+print(f"  Saved: {OUTPUT_DIR}/detailed_metrics_breakdown.png")
 
 # ============================================================================
 # CREATE SUMMARY REPORT
 # ============================================================================
-print("\n📝 Creating Summary Report...")
+print("\n Creating Summary Report...")
 
 with open(f'{OUTPUT_DIR}/metrics_summary.txt', 'w', encoding='utf-8') as f:
     f.write("="*80 + "\n")
@@ -301,37 +303,43 @@ with open(f'{OUTPUT_DIR}/metrics_summary.txt', 'w', encoding='utf-8') as f:
     f.write("KEY INSIGHTS:\n")
     f.write("="*80 + "\n\n")
     
-    f.write("✅ META-RL WINS in 7/8 metrics:\n")
+    f.write("META-RL WINS in 7/8 metrics:\n")
     f.write("   - All traditional metrics (carbon, cost, peak)\n")
     f.write("   - Ramping (smoothest control)\n")
     f.write("   - Average peak demand (best peak management)\n")
     f.write("   - Annual peak demand (lowest maximum peak)\n")
     f.write("   - Net consumption (lowest total energy)\n\n")
     
-    f.write("⚠️  RBC WINS in 1/8 metrics:\n")
+    f.write("RBC WINS in 1/8 metrics:\n")
     f.write("   - Load factor (most efficient, but fails everything else)\n\n")
     
-    f.write("❌ STANDARD RL FAILS:\n")
-    f.write("   - Negative performance in traditional metrics\n")
+    f.write("STANDARD RL UNDERPERFORMS:\n")
+    f.write("   - Small positive performance in traditional metrics (much lower than Meta-RL)\n")
     f.write("   - Higher ramping (less smooth control)\n")
-    f.write("   - Higher consumption and peaks\n\n")
+    f.write("   - Higher consumption and peaks compared to Meta-RL\n\n")
     
-    f.write("🎯 CONCLUSION:\n")
+    f.write("CONCLUSION:\n")
     f.write("   Meta-RL demonstrates superior generalization with consistent\n")
     f.write("   positive performance across nearly all metrics on unseen buildings.\n")
     f.write("="*80 + "\n")
 
-print(f"  ✅ Saved: {OUTPUT_DIR}/metrics_summary.txt")
+print(f"Saved: {OUTPUT_DIR}/metrics_summary.txt")
 
 print("\n" + "="*80)
-print("✅ COMPREHENSIVE METRICS TABLES CREATED!")
+print("COMPREHENSIVE METRICS TABLES CREATED!")
 print("="*80)
 print("\nFiles created:")
 print("  1. comprehensive_metrics_table.png - Main comprehensive table")
 print("  2. detailed_metrics_breakdown.png - Detailed breakdown with explanations")
 print("  3. metrics_summary.txt - Text summary report")
 
-print(f"\n🏆 META-RL WINS 7/8 METRICS:")
-print(f"  ✅ Carbon, Cost, Peak (traditional)")
-print(f"  ✅ Ramping, Avg Peak, Annual Peak, Net Consumption (advanced)")
-print(f"  ⚠️  Only loses Load Factor to RBC (but RBC fails everything else)")
+print(f"\n META-RL WINS 7/8 METRICS:")
+print(f"  Carbon, Cost, Peak (traditional)")
+print(f"  Ramping, Avg Peak, Annual Peak, Net Consumption (advanced)")
+print(f"  Only loses Load Factor to RBC (but RBC fails everything else)")
+
+print("\n Key Message:")
+print("  Meta-RL achieves superior performance across nearly ALL metrics")
+print("  Standard RL and RBC fail on the metrics that matter most")
+print("  This demonstrates comprehensive building energy optimization!")
+print("="*80)

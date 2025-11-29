@@ -30,24 +30,35 @@ OBS_COLUMNS = [
 ]
 
 def load_all_building_data(data_root):
-    task_datasets = []
+    # 1. Load all raw data first
+    raw_dfs = []
     for building in BUILDINGS:
         csv_path = os.path.join(data_root, building, 'data.csv')
         df = pd.read_csv(csv_path)
-
-        # Select only relevant columns
         df = df[OBS_COLUMNS]
+        raw_dfs.append(df)
 
-        # Normalize values per building (independently)
-        scaler = MinMaxScaler()
-        df_scaled = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    # 2. Define Training Data (Buildings 1-4 are indices 0-3)
+    # We fit the scaler ONLY on training data to simulate real deployment
+    train_dfs = raw_dfs[:4]
+    combined_train_data = pd.concat(train_dfs, axis=0)
 
+    # 3. Fit Global Scaler on Training Data
+    scaler = MinMaxScaler()
+    scaler.fit(combined_train_data)
+
+    # 4. Transform ALL data (Train + Test) using the Training Scaler
+    # This preserves the relative magnitude differences of Test buildings
+    task_datasets = []
+    for df in raw_dfs:
+        df_scaled = pd.DataFrame(scaler.transform(df), columns=df.columns)
         task_datasets.append(df_scaled)
 
-    return task_datasets
+    # Return scaler and columns for denormalization
+    return task_datasets, scaler, OBS_COLUMNS
 
 # Load all task datasets
-tasks = load_all_building_data(DATA_ROOT)
+tasks, scaler, columns = load_all_building_data(DATA_ROOT)
 
 # Print dataset information
 for i, task_df in enumerate(tasks):
