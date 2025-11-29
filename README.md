@@ -9,7 +9,7 @@
 **1st Examiner:** Stefan Lessmann
 
 
-![Performance Results](outputs/eval/graphs/combined_figure.png)
+![Performance Results](outputs/graphs/combined_figure.png)
 
 ---
 
@@ -118,7 +118,7 @@ python table.py
 
 ## Results
 
-![Results](./outputs/eval/graphs/consumption_patterns.png)
+![Results](./outputs/graphs/consumption_patterns.png)
 
 ---
 
